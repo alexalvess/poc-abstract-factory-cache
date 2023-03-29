@@ -16,12 +16,8 @@ public class MemoryCacheProvider : ICacheFactory
             var callbackValues = await callback(cancellationToken);
             value = callbackValues.value;
 
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-            {
-                AbsoluteExpiration = callbackValues.expireAt
-            };
-
-            _cache.Set(key, value, cacheEntryOptions);
+            var cacheOptions = new MemoryCacheEntryOptions() { AbsoluteExpiration = callbackValues.expireAt };
+            _cache.Set(key, value, cacheOptions);
         }
 
         return value;

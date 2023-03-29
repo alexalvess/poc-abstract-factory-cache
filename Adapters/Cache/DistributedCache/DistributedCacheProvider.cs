@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace poc_abstract_factory_cache.Adapters.Cache.DistributedCache;
 
@@ -9,10 +10,19 @@ public class DistributedCacheProvider : ICacheFactory
     public DistributedCacheProvider(IDistributedCache cache)
         => _cache = cache;
 
-    public async Task<T> OnGetAsync<T>(string key, Func<Task<(T value, DateTimeOffset expireAt)>> callback, CancellationToken cancellationToken)
+    public async Task<T> OnGetAsync<T>(string key, Func<CancellationToken, Task<(T value, DateTimeOffset expireAt)>> callback, CancellationToken cancellationToken)
     {
-        var jsonContent = await _cache.GetAsync(key,cancellationToken).ConfigureAwait(false);
+        var jsonContent = await _cache.GetStringAsync(key, cancellationToken);
 
-        throw new NotImplementedException();
+        if (jsonContent is null)
+        {
+            var (value, expireAt) = await callback(cancellationToken);
+
+            var cacheOptions = new DistributedCacheEntryOptions { AbsoluteExpiration = expireAt };
+            await _cache.SetStringAsync(key, JsonSerializer.Serialize(value), cacheOptions, cancellationToken);
+            return value;
+        }
+
+        return JsonSerializer.Deserialize<T>(jsonContent) ?? throw new Exception("Invalid cache content");
     }
 }
