@@ -2,7 +2,7 @@
 
 namespace poc_abstract_factory_cache.Adapters.Cache.MemoryCache;
 
-public class MemoryCacheProvider : ICacheFactory
+public class MemoryCacheProvider : ICacheProvider
 {
     private readonly IMemoryCache _cache;
 

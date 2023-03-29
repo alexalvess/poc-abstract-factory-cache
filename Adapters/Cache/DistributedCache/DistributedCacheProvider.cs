@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace poc_abstract_factory_cache.Adapters.Cache.DistributedCache;
 
-public class DistributedCacheProvider : ICacheFactory
+public class DistributedCacheProvider : IDistributedCacheProvider
 {
     private readonly IDistributedCache _cache;
 
