@@ -16,5 +16,7 @@ var builder = serviceCollections.BuildServiceProvider();
 
 var service = builder.GetRequiredService<ITokenService>();
 
-await service.UseWithInMemoryCache();
-await service.UseWithDistributedCache();
+Console.WriteLine(await service.UseWithInMemoryCache());
+Console.WriteLine(await service.UseWithDistributedCache());
+
+Console.ReadKey();

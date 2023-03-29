@@ -9,23 +9,23 @@ public class TokenService : ITokenService
 	public TokenService(IAbstractCacheFactory cacheFactory)
         => _cacheFactory = cacheFactory;
 
-    public async Task UseWithInMemoryCache()
+    public async Task<string> UseWithInMemoryCache()
     {
-        await _cacheFactory
+        return await _cacheFactory
             .UseInMemoryCache()
-            .OnGetAsync("temp", (ct) =>
+            .OnGetAsync("key", (ct) =>
             {
-                return Task.FromResult(("teste", DateTimeOffset.Now.AddSeconds(30)));
+                return Task.FromResult(("Memory cache content", DateTimeOffset.Now.AddSeconds(30)));
             }, default);
     }
 
-    public async Task UseWithDistributedCache()
+    public async Task<string> UseWithDistributedCache()
     {
-        await _cacheFactory
+        return await _cacheFactory
             .UseDistributedCache()
-            .OnGetAsync("temp", (ct) =>
+            .OnGetAsync("key", (ct) =>
             {
-                return Task.FromResult(("teste", DateTimeOffset.Now.AddSeconds(30)));
+                return Task.FromResult(("Distributed cache content", DateTimeOffset.Now.AddSeconds(30)));
             }, default);
     }
 }

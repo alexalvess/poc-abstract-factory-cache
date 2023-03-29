@@ -2,7 +2,7 @@
 
 public interface ITokenService
 {
-    Task UseWithInMemoryCache();
+    Task<string> UseWithInMemoryCache();
 
-    Task UseWithDistributedCache();
+    Task<string> UseWithDistributedCache();
 }
